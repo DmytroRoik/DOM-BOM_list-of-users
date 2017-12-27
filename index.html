@@ -3,19 +3,36 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
-
+	<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-	 <ul class="employeeList">
-   <li>
-     <span class="employeeFirstName">John</span>
-     <span class="employeeLastName">Doe</span>
-     <span class="employeeSalary">$ 1000</span>
-     <span class="employeePosition">Manager</span>
-   </li>
- </ul>
- <button class="addEmployee">
- Add New emplyee</button>
- <script src="js/app.js" defer></script>
+	
+	<h1>List of employees</h1>
+	<ul class="employeeList">
+		<li>
+			<span class="employeeFirstName">FirstName</span>
+			<span class="employeeLastName">LastName</span>
+			<span class="employeeSalary">Salary</span>
+			<span class="employeePosition">Position</span>
+		</li>
+	</ul>
+	<button class="addEmployee">Add New emplyee</button>
+
+	<form class="hidden" id="emploeeForm" onsubmit="createUser()">
+		<label for="firstName">First Name:</label>
+		<input type="text" id="firstName" pattern="[A-z]{1,}" required>
+
+		<label for="lastName" >Last Name: </label>
+		<input type="text" id="lastName" pattern="[A-z]{1,}" required>
+
+		<label for="salary" >Salary : </label>
+		<input type="number" id="salary" pattern="[0-9]{1,}" required>
+
+		<label for="position">Position : </label>
+		<input type="text" id="position" pattern="[A-z]{1,}" required>
+
+		<input type="submit" value="Create" class="addEmployee">
+	</form>
+	<script src="js/app.js" defer></script>
 </body>
 </html>

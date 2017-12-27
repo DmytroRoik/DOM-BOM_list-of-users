@@ -1,0 +1,66 @@
+.employeeList{
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+	width: 25%;
+}
+.employeeList li{
+	display: flex;
+	flex-direction: row;
+}
+.employeeFirstName,.employeeLastName,.employeeSalary,.employeePosition{
+	width: 25%;
+	font-size: 18px;
+	text-align: center;
+	padding: 10px 5px;
+}
+.addEmployee{
+	background-color: blue;
+	border-radius: 5px;
+	color:white;
+	width: 200px;
+	font-size: 20px;
+	height: 40px;
+}
+/*Form*/
+.hidden{
+	display: none;
+}
+.visible{
+	display:flex;
+}
+form{
+	margin-top: 20px;
+	background-color: rgba(162,122,13,.25);
+	width: 400px;
+	display:flex;
+	align-items: center;
+	border-radius: 20px;
+	flex-direction: column;
+	padding: 20px;
+}
+label{
+	margin-top: 10px;
+	font-size: 18px;
+	font-weight: bold;
+	
+}
+input{
+	width: 90%;
+	height: 25px;
+	margin: 5px 0;
+	font-size: 16px;
+	padding: 3px;
+	text-align: center;
+} 
+input:invalid{
+	border:none;
+	border:2px dashed red;
+}
+input:valid{
+	border:none;
+	border-bottom:2px dashed green;
+}
+/*Form end*/
+

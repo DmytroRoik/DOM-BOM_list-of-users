@@ -1,8 +1,3 @@
-createForm();
-document.getElementsByClassName('addEmployee')[0].onclick=function () {
-	
-};
-
 function User(firstName,lastName,salary,position){
 	this.firstName=firstName;
 	this.lastName=lastName;
@@ -18,16 +13,19 @@ var usersList={
 	users: [],
 	limit: 10,
 	getCountOfUser: function () {
-		return users.length;
+		return this.users.length;
 	},
-	isUserAdded: function (user) {
-		if(this.getCountOfUser()<limit&&this.getAvgSalary()<2000){ this.users.push(user);return true;}
-		else return false;
+	addUser: function (user) {
+		//console.log(this.getCountOfUser(),this.getAvgSalary(),this.limit)
+		if(this.getCountOfUser()<this.limit&&this.getAvgSalary()<2000){ this.users.push(user);}
+		else alert("No free space in table");
 	},
 	getAvgSalary: function () {
+		if (this.getCountOfUser()==0)return 0;
+		console.log(this.getCountOfUser())
 		let sum=0;
-		if (getCountOfUser()==0)return 0;
-		for(let el in this.users){
+		for(let el of this.users){
+			console.log(this.getCountOfUser(),el);
 			sum+=el.salary;
 		}
 		return sum/this.getCountOfUser();
@@ -40,70 +38,82 @@ var usersList={
 	}
 }
 
-function createForm(){
-	var $form = document.createElement('form');
-		$form.innerHTML=
-			'<label for="firstName">First Name: '+
-				'<input type="text" id="firstName"></label><br>'+
-			'<label for="lastName">Last Name: '+
-				'<input type="text" id="lastName"></label><br>'+
-			'<label for="salary">Salary : '+
-				'<input type="number" id="salary"></label><br>'+
-			'<label for="position">Position : '+
-				'<input type="text" id="position"></label><br>'+
-				'<input type="submit" value="Create">';
-				document.body.append($form);
-	$form.addEventListener('submit',createUser);
-	var $tablo=document.createElement('div');
-	    	$tablo.classList.add('tablo');
-		 	$tablo.innerHTML="<label id='employeesCount' >0 </label>"+
-						'<label id="avgSalary">0</label>';
-		document.body.append($tablo);
-}
-
 function createUser(){
 	event.preventDefault();
 	var uFirstName=document.getElementById('firstName').value;
 	var uLastName=document.getElementById('lastName').value;
 	var uSalary = document.getElementById('salary').value;
 	var uPosition=document.getElementById('position').value;
+
 	var errors="";
-	if(!isValid(uFirstName)){
-		errors+='First Name, ';
-	}
-	if(!isValid(uLastName)){
-		errors+='Last Name, ';
-	}
-	if(!isValid(uSalary)){
-		errors+='Salary, ';
-	}
-	if(!isValid(uPosition)){
-		errors+='Position, ';
-	}
+	if(!isValid(uFirstName)) errors+='First Name, ';
+	if(!isValid(uLastName))  errors+='Last Name, ';
+	if(!isValid(uSalary  ))  errors+='Salary, ';
+	if(!isValid(uPosition))	 errors+='Position, ';
 
 	if(errors==""){//users data is good
-		console.log(usersList.isUserPresent(uFirstName,uLastName));
 		var user=new User(uFirstName,uLastName,uSalary,uPosition);
-		if(usersList.isUserPresent(user))
-			{
-				alert('This user have duplicate');return;
+
+		if(usersList.isUserPresent(user)){
+				alert('This user have duplicate');return;//user is a present
 			}
-		else usersList.users.push(user);
-	}else {
-		alert("Invalid data: "+errors);
-		return;
+			else{
+				usersList.addUser(user);
+				showUsersInList();
+				ShowForm(false);
+			}
+		}
+		else {
+			alert("Invalid data: "+errors);
+		}
 	}
-}
-function isValid(value) {
-	if(value=="")return false;
-	var regex;
-	if(isNaN(value)) regex=/^[A-Z|a-z]/;
-	else regex= /^[0-9]/;
 
-	for(let el of value)
-		if(!regex.test(el))return false;
+	function isValid(value) {
+		if(value=="")return false;
+		var regex;
+		if(isNaN(value)) regex=/^[A-Z|a-z]/;
+		else regex= /^[0-9]/;
 
-	return true;
-}
+		for(let el of value)
+			if(!regex.test(el))return false;
 
+		return true;
+	}
+
+	function showUsersInList () {
+		var $list=document.getElementsByClassName('employeeList')[0];
+		var header=$list.children[0];
+		$list.innerHTML='';
+		$list.append(header);
+
+		if(usersList.users.length==0)return;
+		for(var el of usersList.users){
+			
+			var $li=document.createElement('li'),
+			$firstName=document.createElement('span'),
+			$lastName=document.createElement('span'),
+			$salary=document.createElement('span'),
+			$position=document.createElement('span');
+
+			$firstName.classList.add('employeeFirstName');
+			$lastName.classList.add('employeeLastName');
+			$salary.classList.add('employeeSalary');
+			$position.classList.add('employeePosition');
+
+			$firstName.innerText=el.firstName;
+			$lastName.innerText=el.lastName;
+			$salary.innerText='$'+el.salary;
+			$position.innerText=el.position;
+			$li.append($firstName,$lastName,$salary,$position);
+
+			$list.append($li);
+		}
+	}
+
+	function ShowForm () {
+		var $form=document.getElementById('emploeeForm');
+		$form.classList.toggle('visible');
+		$form.reset();
+	}
+	document.getElementsByClassName('addEmployee')[0].addEventListener('click', ShowForm);
 
