@@ -1,34 +1,21 @@
-function User(firstName,lastName,salary,position){
-	this.firstName=firstName;
-	this.lastName=lastName;
-	this.salary=salary;
-	this.position=position;
-}
-User.prototype.isEquals = function(user){
-	if(user.firstName==this.firstName&&user.lastName==this.lastName)return true;
-	else return false; 
-};
-
 var usersList={
 	users: [],
 	limit: 10,
-	getCountOfUser: function () {
-		return this.users.length;
-	},
 	addUser: function (user) {
-		//console.log(this.getCountOfUser(),this.getAvgSalary(),this.limit)
-		if(this.getCountOfUser()<this.limit&&this.getAvgSalary()<2000){ this.users.push(user);}
-		else alert("No free space in table");
+		if(this.users.length<this.limit&&this.getAvgSalary()<2000){ this.users.push(user);}
+		else alert("Count of Employee more than "+this.limit+" or average salary more than 2000");
+	},
+	isUserCanBeAdded: function  () {
+		return this.users.length<this.limit;
 	},
 	getAvgSalary: function () {
-		if (this.getCountOfUser()==0)return 0;
-		console.log(this.getCountOfUser())
+		if (this.users.length==0)return 0;
 		let sum=0;
+
 		for(let el of this.users){
-			console.log(this.getCountOfUser(),el);
-			sum+=el.salary;
+			sum+= +el.salary;
 		}
-		return sum/this.getCountOfUser();
+		return sum/this.users.length;
 	},
 	isUserPresent: function (user) {
 		for(let el of this.users){
@@ -38,8 +25,30 @@ var usersList={
 	}
 }
 
+//
+document.getElementById('limitUser').value=usersList.limit;
+//
+function setListInfo () {
+	var $countOfUserSpan=document.querySelector('.tablo .listInfo span');
+	var $avgSalarySpan=document.querySelectorAll('.tablo .listInfo span')[1];
+
+		$countOfUserSpan.innerText=""+usersList.users.length;
+		$avgSalarySpan.innerText="$"+usersList.getAvgSalary();
+}
+
+function setLimit(){
+	var $limit=document.getElementById('limitUser');
+	if(isValid($limit.value))usersList.limit=$limit.value;
+	else alert('limit is invalid');
+	$limit.value=usersList.limit;
+	allowCreateUser(usersList.isUserCanBeAdded());
+}
 function createUser(){
 	event.preventDefault();
+	if(!usersList.isUserCanBeAdded()){
+		alert("No free space in table1")
+		return;
+	}
 	var uFirstName=document.getElementById('firstName').value;
 	var uLastName=document.getElementById('lastName').value;
 	var uSalary = document.getElementById('salary').value;
@@ -61,11 +70,14 @@ function createUser(){
 				usersList.addUser(user);
 				showUsersInList();
 				ShowForm(false);
+				setListInfo();
+				document.getElementById('limitUser').min=usersList.users.length;
 			}
 		}
 		else {
 			alert("Invalid data: "+errors);
 		}
+		allowCreateUser(usersList.isUserCanBeAdded());
 	}
 
 	function isValid(value) {
@@ -114,6 +126,13 @@ function createUser(){
 		var $form=document.getElementById('emploeeForm');
 		$form.classList.toggle('visible');
 		$form.reset();
+		allowCreateUser(usersList.isUserCanBeAdded());
 	}
-	document.getElementsByClassName('addEmployee')[0].addEventListener('click', ShowForm);
+	function allowCreateUser(isCanAdd){
+		if(isCanAdd){
+			document.querySelector('form button').disabled=false;
+		}
+		else document.querySelector('form button').disabled=true;
+	}
+
 
